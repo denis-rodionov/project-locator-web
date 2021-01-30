@@ -8,7 +8,7 @@ import ProjectList from "./ProjectList";
 
 function App() {
   return (
-      <Grid verticalAlign='middle' textAlign='center' style={{ marginTop: '3em' }}>
+      <Grid verticalAlign='middle' textAlign='center' style={{ marginTop: '2em' }}>
             <ProjectList />
       </Grid>
 
