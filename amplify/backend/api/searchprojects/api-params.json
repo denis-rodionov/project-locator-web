@@ -1,0 +1,41 @@
+{
+    "paths": [
+        {
+            "name": "/project",
+            "lambdaFunction": "searchprojectsfunction",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/GET"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            },
+            "policyResourceName": "/project"
+        }
+    ],
+    "resourceName": "searchprojects",
+    "apiName": "searchprojects",
+    "functionArns": [
+        {
+            "lambdaFunction": "searchprojectsfunction"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 1,
+        "authRoleName": "amplify-projectlocatorweb-prod-230614-authRole",
+        "unAuthRoleName": "amplify-projectlocatorweb-prod-230614-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "searchprojectsfunction",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
