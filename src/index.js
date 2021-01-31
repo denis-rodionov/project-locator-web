@@ -8,24 +8,6 @@ import Amplify, { API } from "aws-amplify";
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
 
-const apiName = 'searchprojects';
-const path = '/project';
-const myInit = { // OPTIONAL
-    headers: {}, // OPTIONAL
-    response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
-    queryStringParameters: {  // OPTIONAL
-        name: 'param',
-    },
-};
-
-API
-  .get(apiName, path, myInit)
-  .then(response => {
-    console.log("Response: " + JSON.stringify(response.data))
-  })
-  .catch(error => {
-    console.log(error + ", " + error.response);
- });
 
 ReactDOM.render(
   <React.StrictMode>

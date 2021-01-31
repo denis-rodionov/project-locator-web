@@ -1,152 +1,110 @@
 import React, {Component} from 'react'
 import './ProjectList.css'
 import {Accordion, Icon, List, Grid, Label} from 'semantic-ui-react'
+import {API} from "aws-amplify";
 
 export default class ProjectList extends Component {
-    state = {activeIndex: -1}
+    state = {activeIndex: -1, projects: []}
 
     handleClick = (e, titleProps) => {
         const {index} = titleProps
-        const {activeIndex} = this.state
+        const {activeIndex, _} = this.state
         const newIndex = activeIndex === index ? -1 : index
 
         this.setState({activeIndex: newIndex})
     }
 
+    componentDidMount() {
+        this.fetchData()
+    }
+
+    fetchData() {
+        const apiName = 'searchprojects';
+        const path = '/project';
+        const myInit = { // OPTIONAL
+            headers: {}, // OPTIONAL
+            response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
+            queryStringParameters: {  // OPTIONAL
+                name: 'param',
+            },
+        };
+
+        console.log("getting projects...")
+        API
+          .get(apiName, path, myInit)
+          .then(response => {
+            console.log("Response: " + JSON.stringify(response.data));
+            this.setState({ projects: response.data })
+          })
+          .catch(error => {
+            console.log(error + ", " + error.response);
+         });
+    }
+
     render() {
-        const {activeIndex} = this.state
+        const {activeIndex, projects} = this.state
 
-        return (
-            <Accordion styled>
+        const renderedSkills = projects.map((project, index) =>
+            project['skills'].map((skill, index) =>
+                <Label as='span' className='skill-tag'>{skill}</Label>
+            )
+        );
+        console.log(renderedSkills)
+
+        const renderedProjects = projects.map((project, index) => [
                 <Accordion.Title
-                    active={activeIndex === 0}
-                    index={0}
+                    active={activeIndex === index}
+                    index={index}
                     onClick={this.handleClick}
+                    key={"title" + index}
                 >
-
                         <Grid>
                             <Grid.Row>
                                 <Grid.Column width={1}>
                                     <Icon name='dropdown'/>
                                 </Grid.Column>
                                 <Grid.Column width={11}>
-                                    Java Developer
+                                    { project['title'] }
                                 </Grid.Column>
                                 <Grid.Column width={4}>
                                     <div className="ui label orange">
-                                        Today
+                                        { new Date(project['publication_timestamp'] * 1000).toDateString() }
                                     </div>
                                 </Grid.Column>
                             </Grid.Row>
                         </Grid>
-
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === 0}>
+                </Accordion.Title>,
+                <Accordion.Content active={activeIndex === index} key={"content" + index}>
                     <List>
-                        <List.Item icon='calendar alternate outline' content='March 2021'/>
-                        <List.Item icon='clock' content='3 Month' />
-                        <List.Item icon='marker' content='Munich, Germany'/>
+                        <List.Item icon='calendar alternate outline' content={project['start']} />
+                        <List.Item icon='clock' content={project['duration']} />
+                        <List.Item icon='marker' content={project['location']} />
                         <List.Item
                             icon='linkify'
-                            content={<a href='http://www.semantic-ui.com'>Gulp</a>}
+                            content={<a href={project['url']}>Gulp</a>}
                         />
-                        <List.Item icon='euro sign' content='50 euro per hour' />
-                        <List.Item icon='search' content='Java' />
-                        <List.Item icon='leanpub' content='Publication time: 19.01.2021 14:31 h' />
-                        <List.Item icon='users' content='Provider: 30' />
+                        <List.Item icon='euro sign' content={project['rate']} />
+                        <List.Item icon='search' content={project['query']} />
+                        <List.Item icon='leanpub' content={ "Publication time: " + project['publication_time']} />
+                        <List.Item icon='users' content={project['provider']} />
                         <List.Item/>
                         <List.Description>
                             <h5>Description:</h5>
                             <p>
-                                A dog is a type of domesticated animal. Known for its loyalty and
-                                faithfulness, it can be found as a welcome guest in many households
-                                across the world.
+                                {project['description']}
                             </p>
                         </List.Description>
+                        <List.Item icon='search' content={project['search_query']} />
                         <List.Item icon='address card' content='Skills'>
-                            <Label as='span' class='skill-tact'>Java</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
-                            <Label as='span' className='skill-tag'>Linux</Label>
+                            {renderedSkills[index]}
                         </List.Item>
                     </List>
+                </Accordion.Content>]
+        );
 
-                </Accordion.Content>
-
-                <Accordion.Title
-                    active={activeIndex === 1}
-                    index={1}
-                    onClick={this.handleClick}
-                >
-                    <Grid>
-                            <Grid.Row>
-                                <Grid.Column width={1}>
-                                    <Icon name='dropdown'/>
-                                </Grid.Column>
-                                <Grid.Column width={11}>
-                                    Python Developer
-                                </Grid.Column>
-                                <Grid.Column width={4}>
-                                    <div className="ui label orange">
-                                        19.01.2021
-                                    </div>
-                                </Grid.Column>
-                            </Grid.Row>
-                        </Grid>
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === 1}>
-                    <p>
-                        There are many breeds of dogs. Each breed varies in size and
-                        temperament. Owners often select a breed of dog that they find to be
-                        compatible with their own lifestyle and desires from a companion.
-                    </p>
-                </Accordion.Content>
-
-                <Accordion.Title
-                    active={activeIndex === 2}
-                    index={2}
-                    onClick={this.handleClick}
-                >
-                    <Grid>
-                            <Grid.Row>
-                                <Grid.Column width={1}>
-                                    <Icon name='dropdown'/>
-                                </Grid.Column>
-                                <Grid.Column width={11}>
-                                    Ruby Developer
-                                </Grid.Column>
-                                <Grid.Column width={4}>
-                                    <div className="ui label gray">
-                                        03.01.2021
-                                    </div>
-                                </Grid.Column>
-                            </Grid.Row>
-                        </Grid>
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === 2}>
-                    <p>
-                        Three common ways for a prospective owner to acquire a dog is from
-                        pet shops, private owners, or shelters.
-                    </p>
-                    <p>
-                        A pet shop may be the most convenient way to buy a dog. Buying a dog
-                        from a private owner allows you to assess the pedigree and
-                        upbringing of your dog before choosing to take it home. Lastly,
-                        finding your dog from a shelter, helps give a good home to a dog who
-                        may not find one so readily.
-                    </p>
-                </Accordion.Content>
+        return (
+            <Accordion styled>
+                {renderedProjects}
             </Accordion>
         )
     }
