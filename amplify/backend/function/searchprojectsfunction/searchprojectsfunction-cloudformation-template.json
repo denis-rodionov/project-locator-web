@@ -69,7 +69,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-projectlocatorweb-prod-230614-deployment",
-          "S3Key": "amplify-builds/searchprojectsfunction-6c6c347041583739746c-build.zip"
+          "S3Key": "amplify-builds/searchprojectsfunction-70787a66444671546132-build.zip"
         }
       }
     },

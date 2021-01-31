@@ -12,8 +12,10 @@ const apiName = 'searchprojects';
 const path = '/project';
 const myInit = { // OPTIONAL
     headers: {}, // OPTIONAL
-    response: true,
-    queryStringParameters: {  },
+    response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
+    queryStringParameters: {  // OPTIONAL
+        name: 'param',
+    },
 };
 
 API
