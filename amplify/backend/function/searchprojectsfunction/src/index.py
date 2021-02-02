@@ -1,5 +1,7 @@
 import json
 import boto3
+from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Attr
 
 TABLE_NAME = 'pl_projects'
 
@@ -10,8 +12,13 @@ def handler(event, context):
 
     client = boto3.resource("dynamodb")
     table = client.Table(TABLE_NAME)
-    response = table.scan()
+    response = table.query(
+        IndexName='exclude-index',
+        KeyConditionExpression=Key('exclude_from_search').eq(0),
+        ScanIndexForward=False
+        )
     data = response['Items']
+    print('Data from DB:', data)
 
     response = {
         "statusCode": 200,
